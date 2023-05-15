@@ -19,7 +19,6 @@ export class App extends Component {
       this.setState({contacts: parsedContacts})
     }
   }
-
   componentDidUpdate(prevProps, prevState) {
     if (prevState.contacts !== this.state.conatcts) {
       localStorage.setItem('myContacts', JSON.stringify(this.state.contacts));
