@@ -2,15 +2,29 @@ import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
 import { Container, PhonebookContainer, PhonebookTitle } from './App.styled';
 import Contacts from './Phonebook/ContactsList/ContactList';
-import { ContactAddForm } from './Phonebook/ContactAddForm/ContactAddForm'; 
+import { ContactAddForm } from './Phonebook/ContactAddForm/ContactAddForm';
 import Filter from './Phonebook/Filter/Filter';
-import ContactsData from './Phonebook/Data/ContactsData.json';
 
 export class App extends Component {
   state = {
-    contacts: ContactsData,
+    contacts: [],
     filter: '',
   };
+  componentDidMount() {
+    const savedContacts = localStorage.getItem('myContacts');
+    
+    console.log(savedContacts);
+    if (savedContacts) {
+      const parsedContacts = JSON.parse(savedContacts);
+      this.setState({contacts: parsedContacts})
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.conatcts) {
+      localStorage.setItem('myContacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   nameCheker = name => {
     return this.state.contacts.find(contact => contact.name === name);
@@ -52,8 +66,7 @@ export class App extends Component {
       <Container>
         <PhonebookContainer>
           <PhonebookTitle>Phonebook</PhonebookTitle>
-          <ContactAddForm onSubmit={this.onFormSubmit}
-          ></ContactAddForm>
+          <ContactAddForm onSubmit={this.onFormSubmit}></ContactAddForm>
         </PhonebookContainer>
         <Filter
           value={this.state.filter}
